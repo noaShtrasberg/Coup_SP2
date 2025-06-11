@@ -1,8 +1,8 @@
 // noashalom5@gmail.com
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "Game.hpp"
+#include "game.hpp"
 #include "doctest.hpp"
-#include "Player.hpp"
+#include "player.hpp"
 #include <sstream>
 #include <iostream>
 
@@ -88,18 +88,18 @@ TEST_CASE("FindPlayerByUsername") {
     }
 }
 
-TEST_CASE("Testing Game::thereIs() function") {
+TEST_CASE("ThereIs") {
     Game game;
     CHECK(game.thereIs("Judge") == false);
     CHECK(game.thereIs("General") == false);
 
-    Player* judgePlayer = new Judge("Noa");
-    game.addPlayer(judgePlayer);
+    Player* judge = new Judge("Noa");
+    game.addPlayer(judge);
     CHECK(game.thereIs("Judge") == true);
     CHECK(game.thereIs("General") == false);
 
-    Player* generalPlayer = new General("Lior");
-    game.addPlayer(generalPlayer);
+    Player* general = new General("Lior");
+    game.addPlayer(general);
     CHECK(game.thereIs("Judge") == true);
     CHECK(game.thereIs("General") == true);
 

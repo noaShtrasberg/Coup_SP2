@@ -1,6 +1,7 @@
 // noashalom5@gmail.com
 
-#include "Game.hpp"
+#include "game.hpp"
+#include "player.hpp"
 #include <iostream>
 #include <string>
 using namespace std;
