@@ -3,14 +3,15 @@
 #ifndef GENERAL_HPP
 #define GENERAL_HPP
 
-#include <string>
+#include "player.hpp"
+
 using namespace std;
 
 namespace coup {
     
 class General : public Player { 
     public:
-        General(const string& game, const string& name)
+        General(Game* game, const string& name)
             : Player(game, name) {
                 type = "General";
             }
@@ -19,3 +20,5 @@ class General : public Player {
         bool wantsToUndoCoup() const;
     };
 }
+
+#endif

@@ -3,20 +3,23 @@
 #ifndef BARON_HPP
 #define BARON_HPP
 
-#include <string>
+#include "player.hpp"
+
 using namespace std;
 
 namespace coup {
     
 class Baron : public Player { 
     public:
-        Baron(const string& game, const string& name)
+        Baron(Game* game, const string& name)
             : Player(game, name) {
                 type = "Baron";
             }
         virtual ~Baron() override {}
         
         void specialTurn() override;
-        void invest() const;
+        void invest();
     };
 }
+
+#endif

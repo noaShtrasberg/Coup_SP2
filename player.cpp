@@ -1,6 +1,7 @@
 // noashalom5@gmail.com
 #include "game.hpp"
 #include "player.hpp"
+#include <algorithm>
 #include <iostream>
 #include <stdexcept> 
 #include <string>
@@ -8,21 +9,9 @@ using namespace std;
 
 namespace coup {
 
-    string Player::getUsername() const {
-        return username;
-    }
-
-    int Player::getCoins() const {
-        return coins;
-    }
-
-    void Player::setCoins(int c) {
-        coins = c;
-    }
-
     // Check if this is player's turn
     bool Player::myTurn() const {
-        string userTurn = game->currentPlayer().getUsername();
+        string userTurn = game->currentPlayer()->getUsername();
         if(userTurn != username) {
             cout << "Error: It's not your turn!" << endl;
             return false;
@@ -40,12 +29,13 @@ namespace coup {
 
     bool Player::isAlive() const {
         const auto& players = game->getPlayersList();
-        bool alive = std::find(players.begin(), players.end(), this) != players.end();
-        if(alive) return true;
-        cout << "Error: The player was eliminated from the game." << endl;
-        return false;
+        if (find(players.begin(), players.end(), this) == players.end()) {
+            cout << "Error: The player was eliminated from the game." << endl;
+            return false;
+        }
+        return true;
     }
-    
+
     void Player::skipTurn() {
         if(!myTurn()) return;
         if(tenCoins()) return;
@@ -61,8 +51,8 @@ namespace coup {
         if(tenCoins()) return;
         if(underSanction) {
             if(getRole() != "Baron") {
-            cout << "Error: You can't performe gather. you are under sanction. pick another action." << endl;
-            return;
+                cout << "Error: You can't performe gather. you are under sanction. pick another action." << endl;
+                return;
             }
         }
         coins++;
@@ -138,7 +128,7 @@ namespace coup {
         cout << username << " performed bribe." << endl;
     }
 
-    void arrest(Player* p) {
+    void Player::arrest(Player* p) {
         if (p == nullptr) return;
 
         if (!game->getGameStarted()) game->setGameStarted(true);
@@ -149,14 +139,18 @@ namespace coup {
             cout << "Error: You cannot commit arrest this turn! Pick another action." << endl;
             return;
         }
-        if (didArrest == p->username) {
-            cout << "Error: You cannot arrest " << p->username << " again. Pick another player." << endl;
+        if (didArrest == p->getUsername()) {
+            cout << "Error: You cannot arrest " << p->getUsername() << " again. Pick another player." << endl;
             return;
         }
         if (p->getRole() == "Merchant") {
-            if (p->coins >= 2) {
-                p->coins -= 2;
+            int coinsMerchant =  p->getCoins();
+            if (coinsMerchant >= 2) {
+                p->setCoins(coinsMerchant-2);
                 cout << username << " arrested a merchant." << endl;
+                didArrest = p->getUsername();
+                game->moveTurn();
+                lastAction = "arrest";
                 return;
             }
         }
@@ -165,16 +159,16 @@ namespace coup {
                 cout << "You cannot commit arrest on this player, they don't have enough coins. Pick another action or player." << endl;
                 return;
             }
-            p->coins--;
+            p->setCoins(p->getCoins()-1);
             coins++;
         }
-        didArrest = p->username;
+        didArrest = p->getUsername();
         game->moveTurn();
         lastAction = "arrest";
         cout << username << " performed arrest." << endl;
     }
 
-    void sanction(Player* p) {
+    void Player::sanction(Player* p) {
         if (p == nullptr) return;
 
         if (!myTurn()) return;
@@ -202,7 +196,7 @@ namespace coup {
         cout << username << " performed sanction." << endl;
     }
 
-    void coup(Player* p) {
+    void Player::coup(Player* p) {
         if (p == nullptr) return;
 
         if (!myTurn()) return;
@@ -227,8 +221,8 @@ namespace coup {
         }
 
         cout << username << " performed coup!" << endl;
-        game->removePlayer(p);
-        cout << p->username << " is out of the game!" << endl;
+        game->removePlayer(p->getUsername());
+        cout << p->getUsername() << " is out of the game!" << endl;
         game->moveTurn();
     }
 

@@ -1,12 +1,18 @@
 // noashalom5@gmail.com
 #include "game.hpp"
 #include "player.hpp"
+#include "governor.hpp"
+#include "spy.hpp"
+#include "baron.hpp"
+#include "general.hpp"
+#include "judge.hpp"
+#include "merchant.hpp"
 #include <iostream>
 
 using namespace std;
 
 namespace coup {
-    Game::Game() : playerTurnIndex(0), gameStarted(false), numPlayers(0) {}
+    Game::Game() : numPlayers(0), playerTurnIndex(0), gameStarted(false) {}
 
     Game::~Game() {
         for (Player* player : playersList) {
@@ -35,17 +41,17 @@ namespace coup {
         Player* newPlayer = nullptr;
 
         if (num == 0) {
-            newPlayer = new Governor(username);
+            newPlayer = new Governor(this, username);
         } else if (num == 1) {
-            newPlayer = new Spy(username);
+            newPlayer = new Spy(this, username);
         } else if (num == 2) {
-            newPlayer = new Baron(username);
+            newPlayer = new Baron(this, username);
         } else if (num == 3) {
-            newPlayer = new General(username);
+            newPlayer = new General(this, username);
         } else if (num == 4) {
-            newPlayer = new Judge(username);
+            newPlayer = new Judge(this, username);
         } else if (num == 5) {
-            newPlayer = new Merchant(username);
+            newPlayer = new Merchant(this, username);
         }
         playersList.push_back(newPlayer);
         gameUsernames.insert(username);

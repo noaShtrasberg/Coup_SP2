@@ -21,27 +21,27 @@ game.o: game.cpp game.hpp player.hpp
 player.o: player.cpp player.hpp $(HEADERS)
 	$(CC) $(CFLAGS) -c player.cpp
 
-baron.o: baron.cpp baron.hpp player.hpp
+baron.o: baron.cpp baron.hpp player.hpp game.hpp
 	$(CC) $(CFLAGS) -c baron.cpp
 
-general.o: general.cpp general.hpp player.hpp
+general.o: general.cpp general.hpp player.hpp game.hpp
 	$(CC) $(CFLAGS) -c general.cpp
 
-governor.o: governor.cpp governor.hpp player.hpp
+governor.o: governor.cpp governor.hpp player.hpp game.hpp
 	$(CC) $(CFLAGS) -c governor.cpp
 
-judge.o: judge.cpp judge.hpp player.hpp
+judge.o: judge.cpp judge.hpp player.hpp game.hpp
 	$(CC) $(CFLAGS) -c judge.cpp
 
-spy.o: spy.cpp spy.hpp player.hpp
+spy.o: spy.cpp spy.hpp player.hpp game.hpp
 	$(CC) $(CFLAGS) -c spy.cpp
 
 # ------------------- Tests -------------------
 
-test_player: test_player.o game.o player.o $(HEADERS)
+test_player: test_player.o game.o player.o baron.o general.o governor.o judge.o spy.o
 	$(CC) $(CFLAGS) -o test_player $^
 
-test_game: test_game.o game.o player.o $(HEADERS)
+test_game: test_game.o game.o player.o baron.o general.o governor.o judge.o spy.o
 	$(CC) $(CFLAGS) -o test_game $^
 
 test_player.o: test_player.cpp game.hpp player.hpp doctest.hpp $(HEADERS)

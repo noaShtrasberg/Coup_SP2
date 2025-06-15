@@ -26,7 +26,7 @@ public:
     ~Game();
     
     void addPlayer(const string& username);
-    void removePlayer(Player* player);
+    void removePlayer(const string& username);
     void addPlayer(Player* player);
 
     const vector<Player*>& getPlayersList() const;
@@ -51,5 +51,7 @@ public:
     void players() const;
     void winner() const;
 
+};
 }
-}
+
+#endif

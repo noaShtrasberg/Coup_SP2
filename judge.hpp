@@ -1,12 +1,17 @@
 // noashalom5@gmail.com
-#include <string>
+
+#ifndef JUDGE_HPP
+#define JUDGE_HPP
+
+#include "player.hpp"
+
 using namespace std;
 
 namespace coup {
     
 class Judge : public Player { 
     public:
-        Jugde(const string& game, const string& name)
+        Judge(Game* game, const string& name)
             : Player(game, name) {
                 type = "Judge";
             }
@@ -15,3 +20,5 @@ class Judge : public Player {
         bool wantsToUndoBribe() const;
     };
 }
+
+#endif

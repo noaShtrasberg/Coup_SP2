@@ -1,7 +1,9 @@
 // noashalom5@gmail.com
+
+#include "baron.hpp"
+#include "game.hpp"
 #include <iostream>
-#include <stdexcept> 
-#include <string>
+
 using namespace std;
 
 namespace coup {
@@ -9,9 +11,9 @@ namespace coup {
         this->invest();
     }
 
-    void Baron::invest() const {
-        if(!this->myTurn()) return;
-        if(this->tenCoins()) return;
+    void Baron::invest() {
+        if(!myTurn()) return;
+        if(tenCoins()) return;
         if(coins < 3) {
             cout << "Error: You don't have enough coins to performed invest! pick another action." << endl;
             return;

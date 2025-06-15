@@ -1,7 +1,9 @@
 // noashalom5@gmail.com
+
+#include "judge.hpp"
+#include "player.hpp"
 #include <iostream>
-#include <stdexcept> 
-#include <string>
+
 using namespace std;
 
 namespace coup {

@@ -7,6 +7,7 @@
 using namespace std;
 
 namespace coup {
+class Game; 
     
 class Player { 
 protected:
@@ -21,7 +22,7 @@ protected:
 
 public:
     Player(Game* game, const string& username)
-    : game(game), username(username), coins(0), underSanction(false), alive(true), cantDoArrest(false) {}
+    : game(game), username(username), coins(0), underSanction(false), cantDoArrest(false) {}
 
     virtual ~Player() {}
 
@@ -35,7 +36,7 @@ public:
     * @brief Get the username of the player.
     * @return The player's username.
     */
-    string getUsername() cons {return username;}
+    string getUsername() const {return username;}
 
     /**
     * @brief Get the current amount of coins the player has.
@@ -55,6 +56,16 @@ public:
     */
     string getLastAction() const {return lastAction;}
 
+    void setCantDoArrest(bool value) {cantDoArrest = value;}
+
+    void setUnderSanction(bool value) {underSanction = value;}
+
+    string getDidArrest() const { return didArrest;}
+
+    bool isUnderSanction() const { return underSanction;}
+
+    bool getCantDoArrest() const { return cantDoArrest;}
+
     /**
     * @brief Check if it is this player's turn.
     * Prints an error if not.
@@ -73,13 +84,13 @@ public:
     * @brief Check if the player is still in the game.
     * @return True if the player is alive; otherwise, false.
     */
-    bool isAlive() const
+    bool isAlive() const;
 
     /**
     * @brief Skip the player's turn if possible.
     * Also clears any arrest restriction for the next turn.
     */
-    void skipTurn() const;
+    void skipTurn();
     
     /**
     * @brief Perform the "gather" action to gain 1 coin.
@@ -139,3 +150,5 @@ public:
     virtual void specialTurn() {} 
 };
 }
+
+#endif

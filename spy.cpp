@@ -1,7 +1,10 @@
 // noashalom5@gmail.com
+
+#include "spy.hpp"
+#include "player.hpp"
+#include "game.hpp"
 #include <iostream>
-#include <stdexcept> 
-#include <string>
+
 using namespace std;
 
 namespace coup {
@@ -22,7 +25,7 @@ namespace coup {
                 cout << "Error: Player not found." << endl;
                 return;
             }
-            this->seeCoins(*target);
+            this->seeCoins(target);
         }
         else if (choice == 2) { // blockArrest
             string targetName;
@@ -33,17 +36,17 @@ namespace coup {
                 cout << "Error: Player not found." << endl;
                 return;
             }
-            this->blockArrest(*target);
+            this->blockArrest(target);
         }
     }
 
     void Spy::seeCoins(Player* p) {
         if(!p->isAlive()) return;
-        int playerCoins = p->getCoins();
+        cout << p->getUsername() << " has " << p->getCoins() << " coins." << endl;
     }
 
     void Spy::blockArrest(Player* p) {
         if(!p->isAlive()) return;
-        p->cantDoArrest = true;
+        p->setCantDoArrest(true);
     }
 }

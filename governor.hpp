@@ -2,14 +2,15 @@
 #ifndef GOVERNOR_HPP
 #define GOVERNOR_HPP
 
-#include <string>
+#include "player.hpp"
+
 using namespace std;
 
 namespace coup {
     
 class Governor : public Player { 
     public:
-        Governor(const string& game, const string& name)
+        Governor(Game* game, const string& name)
             : Player(game, name) {
                 type = "Governor";
             }
@@ -18,3 +19,5 @@ class Governor : public Player {
         bool wantsToUndoTax() const;
     };
 }
+
+#endif
