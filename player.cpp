@@ -221,8 +221,8 @@ namespace coup {
         }
 
         cout << username << " performed coup!" << endl;
-        game->removePlayer(p->getUsername());
         cout << p->getUsername() << " is out of the game!" << endl;
+        game->removePlayer(p->getUsername());
         game->moveTurn();
     }
 
