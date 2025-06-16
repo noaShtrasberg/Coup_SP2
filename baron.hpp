@@ -17,7 +17,16 @@ class Baron : public Player {
             }
         virtual ~Baron() override {}
         
+        /**
+        * @brief Executes the Baron's special turn.
+        *        Calls the invest action.
+        */
         void specialTurn() override;
+
+        /**
+        * @brief Baron invests 3 coins (if they have at least 3) and gets 6 instead.
+        * Ends the turn and updates last action.
+        */
         void invest();
     };
 }

@@ -51,19 +51,39 @@ public:
     void setCoins(int c) {coins = c;}
 
     /**
-    * @brief Get the last action the player did.
-    * @return The player's last action.
+    * @brief Get the last action the player performed.
+    * @return A string representing the player's last action.
     */
     string getLastAction() const {return lastAction;}
 
+    /**
+    * @brief Set whether the player is unable to perform an arrest.
+    * @param value True if the player cannot arrest, false otherwise.
+    */
     void setCantDoArrest(bool value) {cantDoArrest = value;}
 
+    /**
+    * @brief Set whether the player is currently under sanction.
+    * @param value True if the player is under sanction, false otherwise.
+    */
     void setUnderSanction(bool value) {underSanction = value;}
 
+    /**
+    * @brief Get the name of the player the current player arrested.
+    * @return A string with the name of the arrested player, or an empty string if no arrest was made.
+    */
     string getDidArrest() const { return didArrest;}
 
+    /**
+    * @brief Check if the player is currently under sanction.
+    * @return True if the player is under sanction, false otherwise.
+    */
     bool isUnderSanction() const { return underSanction;}
 
+    /**
+    * @brief Check if the player is currently restricted from performing an arrest.
+    * @return True if the player cannot arrest, false otherwise.
+    */
     bool getCantDoArrest() const { return cantDoArrest;}
 
     /**
