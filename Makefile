@@ -6,11 +6,12 @@ CFLAGS = -Wall -Wextra -std=c++11
 OFILES = main.o game.o player.o baron.o general.o governor.o judge.o spy.o
 # Headers
 HEADERS = baron.hpp general.hpp governor.hpp judge.hpp spy.hpp merchant.hpp
+LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 
 Main: main run
 
 main: $(OFILES)
-	$(CC) $(CFLAGS) -o main $(OFILES)
+	$(CC) $(CFLAGS) -o main $(OFILES) $(LDFLAGS)
 
 main.o: main.cpp game.hpp player.hpp $(HEADERS)
 	$(CC) $(CFLAGS) -c main.cpp
