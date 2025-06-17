@@ -10,12 +10,15 @@ using namespace coup;
 int main() {
     Game game;
     int numPlayers;
-    cout << "Enter number of players (2-6): ";
-    cin >> numPlayers;
-
-    while(numPlayers < 2 || numPlayers > 6) {
-        cout << "Invalid number of players! Please pick another number" << endl;
-        cin >> numPlayers;
+    while (true) {
+        cout << "Enter number of players (2-6): ";
+        if (cin >> numPlayers && numPlayers >= 2 && numPlayers <= 6) {
+            break;
+        } else {
+            cout << "Invalid input! Please enter another number." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
     }
     cout << "Number of players: " << numPlayers << endl;
 
