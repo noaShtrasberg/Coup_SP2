@@ -62,25 +62,25 @@ public:
     * @brief Returns the index of the player whose turn it currently is.
     * @return An integer representing the turn index.
     */
-    int getPlayerTurnIndex() const;
+    int getPlayerTurnIndex() const {return playerTurnIndex;}
 
     /**
     * @brief Sets the current player turn index.
     * @param n The new index to set.
     */
-    void setPlayerTurnIndex(int n);
+    void setPlayerTurnIndex(int n) {playerTurnIndex = n;}
 
     /**
     * @brief Checks if the game has started.
     * @return True if the game has started, false otherwise.
     */
-    bool getGameStarted() const;
+    bool getGameStarted() const {return gameStarted;}
 
     /**
     * @brief Sets the game started status.
     * @param value True to indicate the game has started.
     */
-    void setGameStarted(bool value);
+    void setGameStarted(bool value) {gameStarted = value;}
 
     /**
     * @brief Checks whether a player with a specific role exists in the game.

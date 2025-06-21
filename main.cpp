@@ -17,8 +17,8 @@ const int WINDOW_HEIGHT = 600;
 
 sf::Font loadFont() {
     sf::Font font;
-    if (!font.loadFromFile("arial.ttf")) {
-        cerr << "Error: Could not load font arial.ttf" << endl;
+    if (!font.loadFromFile("Ubuntu-Regular.ttf")) {
+        cerr << "Error: Could not load font Ubuntu-Regular.ttf" << endl;
         exit(1);
     }
     return font;
@@ -36,7 +36,7 @@ void drawTextBox(sf::RenderWindow& window, const vector<string>& lines, sf::Font
     }
 }
 
-void showErrorPopup(sf::RenderWindow& window, sf::Font& font, const string& message) {
+void showErrorPopup(sf::Font& font, const string& message) {
     sf::RectangleShape popup(sf::Vector2f(500, 150));
     popup.setFillColor(sf::Color(200, 50, 50));
     popup.setPosition((WINDOW_WIDTH - 500) / 2, (WINDOW_HEIGHT - 150) / 2);
@@ -214,11 +214,18 @@ int main() {
         log.push_back("Player " + name + " joined the game");
     }
 
+    log.push_back("Final player list order:");
+    for (const auto& p : game.getPlayersList()) {
+        log.push_back(p->getUsername());
+    }
+
+
     log.push_back("Game started!");
 
     while (window.isOpen() && game.getPlayersList().size() > 1) {
         Player* current = game.currentPlayer();
         log.push_back("It's " + current->getUsername() + "'s turn. Coins: " + to_string(current->getCoins()));
+        log.push_back("== Turn Index: " + to_string(game.getPlayerTurnIndex()) + " ==");
 
         vector<string> actions = {"Gather", "Tax", "Bribe", "Arrest", "Sanction", "Coup", "Skip"};
         if (current->getRole() == "Baron" || current->getRole() == "Spy")
@@ -256,10 +263,9 @@ int main() {
                                     if (!target.empty()) current->coup(target[0]);
                                 } else if (action == "Skip") current->skipTurn();
                                 else if (action == "Special Turn") current->specialTurn();
-                                game.moveTurn();
                                 goto next_turn;
                             } catch (const exception& e) {
-                                showErrorPopup(window, font, e.what());
+                                showErrorPopup(font, e.what());
                             }
                         }
                     }
