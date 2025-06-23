@@ -244,7 +244,7 @@ TEST_CASE("Arrest") {
     judge->arrest(governor); // Do nothing
     CHECK(judge->getCoins() == 5);
     CHECK(governor->getCoins() == 0);
-    CHECK(judge->getDidArrest() == "Noa");
+    CHECK(judge->getDidArrest() == "Lior");
     delete game;
 }
 

@@ -214,18 +214,12 @@ int main() {
         log.push_back("Player " + name + " joined the game");
     }
 
-    log.push_back("Final player list order:");
-    for (const auto& p : game.getPlayersList()) {
-        log.push_back(p->getUsername());
-    }
-
-
     log.push_back("Game started!");
 
     while (window.isOpen() && game.getPlayersList().size() > 1) {
         Player* current = game.currentPlayer();
-        log.push_back("It's " + current->getUsername() + "'s turn. Coins: " + to_string(current->getCoins()));
-        log.push_back("== Turn Index: " + to_string(game.getPlayerTurnIndex()) + " ==");
+        log.push_back("It's " + current->getUsername() + "'s turn. Coins: " + to_string(current->getCoins()) + ". (Role: " + current->getRole() + ").");
+        cout << "It's " + current->getUsername() + "'s turn. Coins: " + to_string(current->getCoins()) + ". (Role: " + current->getRole() + ")." << endl;
 
         vector<string> actions = {"Gather", "Tax", "Bribe", "Arrest", "Sanction", "Coup", "Skip"};
         if (current->getRole() == "Baron" || current->getRole() == "Spy")
@@ -236,7 +230,7 @@ int main() {
 
         for (size_t i = 0; i < actions.size(); ++i) {
             sf::Text text;
-            buttons.push_back(createButton(actions[i], font, 50, 50 + i * 60, 200, 40, text));
+            buttons.push_back(createButton(actions[i], font, 500, 50 + i * 60, 200, 40, text));
             texts.push_back(text);
         }
 

@@ -13,7 +13,7 @@ namespace coup {
     bool Player::myTurn() const {
         string userTurn = game->currentPlayer()->getUsername();
         if(userTurn != username) {
-            Logger::getInstance().log("Error: It's not your turn!");
+            cout << "Error: It's not your turn!" << endl;;
             return false;
         }
         return true;
@@ -21,7 +21,7 @@ namespace coup {
 
     bool Player::tenCoins() const {
         if(coins >= 10) {
-            Logger::getInstance().log("Error: You have 10 coins or more. you must performed coup."); 
+            cout << "Error: You have 10 coins or more. you must performed coup." << endl; 
             return true;
         }
         return false;
@@ -30,7 +30,7 @@ namespace coup {
     bool Player::isAlive() const {
         const auto& players = game->getPlayersList();
         if (find(players.begin(), players.end(), this) == players.end()) {
-            Logger::getInstance().log("Error: The player was eliminated from the game.");
+            cout << "Error: The player was eliminated from the game." << endl;
             return false;
         }
         return true;
@@ -42,7 +42,7 @@ namespace coup {
         game->moveTurn();
         if(cantDoArrest)
             cantDoArrest = false;
-        Logger::getInstance().log(username + " skipped his turn.");
+        cout << username + " skipped his turn." << endl;
     }
 
     void Player::gather() {
@@ -50,15 +50,16 @@ namespace coup {
         if(!myTurn()) return;
         if(tenCoins()) return;
         if(underSanction && getRole() != "Baron") {
-            Logger::getInstance().log("Error: You can't performe gather. you are under sanction. pick another action.");
+            cout << "Error: You can't performe gather. you are under sanction. pick another action." << endl;
             return;
         }
         coins++;
-        game->moveTurn();
         lastAction = "gather";
+        game->moveTurn();
+        if(actionBribe == 1) actionBribe--; 
         if(cantDoArrest)
             cantDoArrest = false;
-        Logger::getInstance().log(username + " performed gather.");
+        cout << username + " performed gather." << endl;
     }
 
     void Player::tax() {
@@ -66,7 +67,7 @@ namespace coup {
         if(!myTurn()) return;
         if(tenCoins()) return;
         if(underSanction && getRole() != "Baron") {
-            Logger::getInstance().log("Error: You can't performe tax. you are under sanction. pick another action.");
+            cout << "Error: You can't performe tax. you are under sanction. pick another action." << endl;
             return;
         }
 
@@ -81,16 +82,19 @@ namespace coup {
         if(underSanction) { // This is a Baron
             underSanction = false;
             if(!block) {
-                Logger::getInstance().log("You are under sanction. you will only receive one coin as compensation.");
+                cout << "You are under sanction. you will only receive one coin as compensation." << endl;
                 coins++;
                 game->moveTurn();
-                Logger::getInstance().log(username + " performed tax.");
+                if(actionBribe == 1) actionBribe--; 
+                cout << username + " performed tax."<< endl;
                 return;
             }
         }
         
         if(block) {
-            Logger::getInstance().log(username + " was blocked from committing a tax.");
+            cout << username + " was blocked from committing a tax." << endl;
+            game->moveTurn();
+            if(actionBribe == 1) actionBribe--; 
             return;
         }
 
@@ -99,14 +103,15 @@ namespace coup {
         else
             coins += 2;
         game->moveTurn();
-        Logger::getInstance().log(username + " performed tax.");
+        if(actionBribe == 1) actionBribe--; 
+        cout << username + " performed tax." << endl;
     }
 
     void Player::bribe() {
         if(!myTurn()) return;
         if(tenCoins()) return;
         if(coins < 4) {
-            Logger::getInstance().log("Error: You don't have enough coins to performed bribe! pick another action.");
+            cout << "Error: You don't have enough coins to performed bribe! pick another action." << endl;
             return;
         }
         coins -= 4;
@@ -115,37 +120,44 @@ namespace coup {
         if(game->thereIs("Judge")) {
             block = game->undoBribe();
         }
-        lastAction = "bribe";
         if(cantDoArrest)
             cantDoArrest = false;
 
         if(block) {
-            Logger::getInstance().log(username + " was blocked from committing a bribe.");
-            return;
+            cout << username + " was blocked from committing a bribe." << endl;
         }
-        Logger::getInstance().log(username + " performed bribe.");
+        else {
+            lastAction = "bribe";
+            actionBribe = 1;
+            cout << username + " performed bribe." << endl;
+        }
+        game->moveTurn();
     }
 
     void Player::arrest(Player* p) {
         if (p == nullptr) return;
-
         if (!game->getGameStarted()) game->setGameStarted(true);
         if (!myTurn()) return;
         if (tenCoins()) return;
         if (!p->isAlive()) return;
+        if (username == p->getUsername()) {
+            cout << "Cannot commit actions on yourself!" << endl;
+            return;
+        }
+
         if (cantDoArrest) {
-            Logger::getInstance().log("Error: You cannot commit arrest this turn! Pick another action.");
+            cout << "Error: You cannot commit arrest this turn! Pick another action." << endl;
             return;
         }
         if (didArrest == p->getUsername()) {
-            Logger::getInstance().log("Error: You cannot arrest " + p->getUsername() + " again. Pick another player.");
+            cout << "Error: You cannot arrest " + p->getUsername() + " again. Pick another player." << endl;
             return;
         }
         if (p->getRole() == "Merchant") {
             int coinsMerchant =  p->getCoins();
             if (coinsMerchant >= 2) {
                 p->setCoins(coinsMerchant-2);
-                Logger::getInstance().log(username + " arrested a merchant.");
+                cout << username + " arrested a merchant." << endl;
                 didArrest = p->getUsername();
                 game->moveTurn();
                 lastAction = "arrest";
@@ -154,31 +166,38 @@ namespace coup {
         }
         if (p->getRole() != "General") {
             if (p->getCoins() == 0) {
-                Logger::getInstance().log("You cannot commit arrest on this player, they don't have enough coins. Pick another action or player.");
-                return;
+                cout << "You cannot commit arrest on this player, he doesn't have enough coins." << endl;
             }
-            p->setCoins(p->getCoins()-1);
-            coins++;
+            else {
+                p->setCoins(p->getCoins()-1);
+                coins++;
+            }
         }
+        else cout << username + " arrested a general." << endl;
         didArrest = p->getUsername();
-        game->moveTurn();
         lastAction = "arrest";
-        Logger::getInstance().log(username + " performed arrest.");
+        game->moveTurn();
+        if(actionBribe == 1) actionBribe--; 
+        cout << username + " performed arrest." << endl;
     }
 
     void Player::sanction(Player* p) {
         if (p == nullptr) return;
-
         if (!myTurn()) return;
         if (tenCoins()) return;
         if (!p->isAlive()) return;
+        if (username == p->getUsername()) {
+            cout << "Cannot commit actions on yourself!" << endl;
+            return;
+        }
+
         if (coins < 3) {
-            Logger::getInstance().log("Error: You don't have enough coins to perform sanction! Pick another action.");
+            cout << "Error: You don't have enough coins to perform sanction! Pick another action." << endl;
             return;
         }
         if (p->getRole() == "Judge") {
             if (coins < 4) {
-                Logger::getInstance().log("Error: You don't have enough coins to perform sanction! Pick another action.");
+                cout << "Error: You don't have enough coins to perform sanction! Pick another action." << endl;
                 return;
             }
             coins -= 4;
@@ -187,20 +206,25 @@ namespace coup {
         }
 
         p->underSanction = true;
-        game->moveTurn();
         lastAction = "sanction";
+        game->moveTurn();
+        if(actionBribe == 1) actionBribe--; 
         if (cantDoArrest)
             cantDoArrest = false;
-        Logger::getInstance().log(username + " performed sanction.");
+        cout << username + " performed sanction." << endl;
     }
 
     void Player::coup(Player* p) {
         if (p == nullptr) return;
-
         if (!myTurn()) return;
         if (!p->isAlive()) return;
+        if (username == p->getUsername()) {
+            cout << "Cannot commit actions on yourself!" << endl;
+            return;
+        }
+        
         if (coins < 7) {
-            Logger::getInstance().log("Error: You don't have enough coins to perform coup! Pick another action.");
+            cout << "Error: You don't have enough coins to perform coup! Pick another action." << endl;
             return;
         }
         coins -= 7;
@@ -214,14 +238,17 @@ namespace coup {
             cantDoArrest = false;
 
         if (block) {
-            Logger::getInstance().log(username + " was blocked from committing a coup.");
+            cout << username + " was blocked from committing a coup." << endl;
+            game->moveTurn();
+            if(actionBribe == 1) actionBribe--; 
             return;
         }
 
-        Logger::getInstance().log(username + " performed coup!");
-        Logger::getInstance().log(p->getUsername() + " is out of the game!");
+        cout << username + " performed coup!" << endl;
+        cout << p->getUsername() + " is out of the game!" << endl;
         game->removePlayer(p->getUsername());
         game->moveTurn();
+        if(actionBribe == 1) actionBribe--; 
     }
 
 }

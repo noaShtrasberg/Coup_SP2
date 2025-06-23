@@ -42,11 +42,19 @@ namespace coup {
 
     void Spy::seeCoins(Player* p) {
         if(!p->isAlive()) return;
+        if (username == p->getUsername()) {
+            cout << "Cannot commit actions on yourself!" << endl;
+            return;
+        }
         cout << p->getUsername() << " has " << p->getCoins() << " coins." << endl;
     }
 
     void Spy::blockArrest(Player* p) {
         if(!p->isAlive()) return;
+        if (username == p->getUsername()) {
+            cout << "Cannot commit actions on yourself!" << endl;
+            return;
+        }
         p->setCantDoArrest(true);
     }
 }

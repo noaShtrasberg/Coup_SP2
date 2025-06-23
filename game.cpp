@@ -23,18 +23,19 @@ namespace coup {
 
     void Game::addPlayer(const string& username) {
         if (gameStarted) {
-            Logger::getInstance().log("The game has already started. You cannot join.");
+            cout << "The game has already started. You cannot join." << endl;
             return;
         }
         if (numPlayers == 6) {
-            Logger::getInstance().log("The game is full. Please join another game.");
+            cout << "The game is full. Please join another game." << endl;
             return;
         }
         if (gameUsernames.count(username)) {
-            Logger::getInstance().log("Username is already taken. Please choose another one.");
+            cout << "Username is already taken. Please choose another one." << endl;
             return;
         }
 
+        srand(time(0));
         int num = rand() % 6;
         Player* newPlayer = nullptr;
 
@@ -48,7 +49,7 @@ namespace coup {
         playersList.push_back(newPlayer);
         gameUsernames.insert(username);
         numPlayers++;
-        Logger::getInstance().log("Player \"" + username + "\" has joined the game");
+        cout << "Player \"" + username + "\" has joined the game" << endl;
     }
 
     void Game::addPlayer(Player* player) {
@@ -104,7 +105,10 @@ namespace coup {
         for (const auto& player : playersList) {
             if (player->getRole() == "General" && player->getCoins() >= 5 && player->getUsername() != p->getUsername()) {
                 auto* general = static_cast<General*>(player);
-                if (general->wantsToUndoCoup()) return true;
+                if (general->wantsToUndoCoup()) {
+                    general->setCoins(general->getCoins()-5);
+                    return true;
+                }
             }
         }
         return false;
@@ -123,7 +127,7 @@ namespace coup {
 
     Player* Game::currentPlayer() const {
         if (playersList.empty()) {
-            Logger::getInstance().log("Error: No players in the game.");
+            cout << "Error: No players in the game." << endl;
             return nullptr;
         }
         return playersList[playerTurnIndex];
@@ -135,7 +139,9 @@ namespace coup {
 
     void Game::moveTurn() {
         if (currentPlayer()->getLastAction() == "bribe") {
-            Logger::getInstance().log(currentPlayer()->getUsername() + " has one more turn, he performed bribe.");
+            cout << currentPlayer()->getUsername() + " has two more turns, this performed bribe." << endl;
+        } else if (currentPlayer()->getActionBribe() == 1) {
+            cout << currentPlayer()->getUsername() + " has one more turn, this performed bribe." << endl;
         } else {
             int newIndex = (getPlayerTurnIndex() + 1) % getPlayersList().size();
             setPlayerTurnIndex(newIndex);
@@ -148,15 +154,15 @@ namespace coup {
 
     void Game::players() const {
         for (const auto& player : playersList) {
-            Logger::getInstance().log(player->getUsername());
+            cout << player->getUsername() << endl;
         }
     }
 
     void Game::winner() const {
         if (playersList.size() != 1) {
-            Logger::getInstance().log("Error: The game is not finished yet.");
+            cout << "Error: The game is not finished yet." << endl;
             return;
         }
-        Logger::getInstance().log("The game is over! The winner is " + playersList.front()->getUsername() + ".");
+        cout << "The game is over! The winner is " + playersList.front()->getUsername() + "." << endl;
     }
 }

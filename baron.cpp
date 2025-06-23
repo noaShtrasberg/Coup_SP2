@@ -19,7 +19,8 @@ namespace coup {
             return;
         }
         coins += 3;
-        game->moveTurn();
         lastAction = "invest";
+        game->moveTurn();
+        if(actionBribe == 1) actionBribe--;        
     }
 }

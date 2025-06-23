@@ -16,13 +16,14 @@ protected:
     string lastAction;
     string didArrest;
     string type;
+    int actionBribe; // After bribe = 1, else = 0
     int coins;
     bool underSanction;
     bool cantDoArrest;
 
 public:
     Player(Game* game, const string& username)
-    : game(game), username(username), coins(0), underSanction(false), cantDoArrest(false) {}
+    : game(game), username(username), actionBribe(0), coins(0), underSanction(false), cantDoArrest(false) {}
 
     virtual ~Player() {}
 
@@ -55,6 +56,12 @@ public:
     * @return A string representing the player's last action.
     */
     string getLastAction() const {return lastAction;}
+
+    /**
+    * @brief Get if the last action before this one was bribe.
+    * @return 1 - yes, 0 - no.
+    */
+    int getActionBribe() const {return actionBribe;}
 
     /**
     * @brief Set whether the player is unable to perform an arrest.
